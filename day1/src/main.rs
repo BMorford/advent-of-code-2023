@@ -56,7 +56,7 @@ fn part2() {
     for line in lines {
         const RADIX: u32 = 10;
 
-        let mut current_line = line.unwrap();
+        let current_line = line.unwrap();
         let number_words = [
             "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "1", "2", "3",
             "4", "5", "6", "7", "8", "9",
