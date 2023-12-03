@@ -91,9 +91,8 @@ impl Game {
     }
 
     fn get_game_value(&mut self, game_values: &String, value_marker: &str, limit: u32) -> Vec<u32> {
-        let matches = game_values.match_indices(&value_marker).collect::<Vec<_>>();
+        let matches = game_values.match_indices(&value_marker);
         matches
-            .iter()
             .map(|x| -> u32 {
                 match game_values.split_at(x.0).0.rsplit_once(" ") {
                     Some(f) => {
