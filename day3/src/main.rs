@@ -30,26 +30,8 @@ fn main() {
 
     let mut part_numbers: Vec<u32> = vec![];
     for (i, line) in part_grid.iter().enumerate() {
-        let line_chars = lines[i].chars().collect::<Vec<_>>();
         for part in line {
-            let mut test_values: Vec<char> = vec![];
-            let char_count = part.1.len();
-
-            if Option::is_some(&part.0.checked_sub(1)) {
-                test_values.push(line_chars[part.0 - 1]);
-            }
-
-            if part.0 + char_count < line_chars.len() {
-                test_values.push(line_chars[part.0 + char_count]);
-            }
-
-            if i != 0 {
-                test_values.extend(slice_index(&lines[i - 1], part).chars())
-            }
-
-            if i + 1 < lines.len() {
-                test_values.extend(slice_index(&lines[i + 1], part).chars())
-            }
+            let test_values: Vec<char> = adjacent_values(&lines, i, part);
 
             if test_values.iter().any(|v| (!v.is_numeric()) && v != &'.') {
                 part_numbers.push(part.1.parse::<u32>().expect(""));
@@ -58,7 +40,9 @@ fn main() {
     }
 
     let sum = part_numbers.iter().sum::<u32>();
-    println!("Part 1 sum: {}", sum)
+    println!("Part 1 sum: {}", sum);
+
+    // Part 2.
 }
 
 fn slice_index(s: &String, m: &(usize, &str)) -> String {
@@ -72,4 +56,28 @@ fn slice_index(s: &String, m: &(usize, &str)) -> String {
     let lower_index = m.0.checked_sub(1).map_or(m.0, |f| f);
 
     s[lower_index..=upper_index].to_string()
+}
+
+fn adjacent_values(grid: &Vec<String>, y_index: usize, part: &(usize, &str)) -> Vec<char> {
+    let line_chars = grid[y_index].chars().collect::<Vec<_>>();
+    let mut values: Vec<char> = vec![];
+    let char_count = part.1.len();
+
+    if Option::is_some(&part.0.checked_sub(1)) {
+        values.push(line_chars[part.0 - 1]);
+    }
+
+    if part.0 + char_count < line_chars.len() {
+        values.push(line_chars[part.0 + char_count]);
+    }
+
+    if y_index != 0 {
+        values.extend(slice_index(&grid[y_index - 1], part).chars())
+    }
+
+    if y_index + 1 < grid.len() {
+        values.extend(slice_index(&grid[y_index + 1], part).chars())
+    }
+
+    return values;
 }
